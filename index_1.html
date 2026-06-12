@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tulja Rathod</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0a0f1c;
+      --surface: #111827;
+      --surface2: #1a2236;
+      --accent: #00d4ff;
+      --accent2: #7c3aed;
+      --accent3: #10b981;
+      --warn: #f59e0b;
+      --text: #e2e8f0;
+      --muted: #64748b;
+      --border: #1e293b;
+      --mono: 'Space Mono', monospace;
+      --sans: 'Space Grotesk', sans-serif;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: var(--sans); line-height: 1.6; overflow-x: hidden; }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; width: 100%; z-index: 100;
+      background: rgba(10,15,28,0.88); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 clamp(1.5rem, 5vw, 4rem);
+      display: flex; justify-content: space-between; align-items: center;
+      height: 60px;
+    }
+    .nav-logo { font-family: var(--mono); font-size: 0.9rem; color: var(--accent); letter-spacing: 0.05em; }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.875rem; font-weight: 500; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--accent); }
+
+    /* HERO */
+    #hero {
+      min-height: 100vh; display: flex; align-items: center;
+      padding: 80px clamp(1.5rem, 8vw, 8rem) 4rem;
+      position: relative; overflow: hidden;
+    }
+    .hero-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 4rem; align-items: center;
+      width: 100%; max-width: 1200px; margin: 0 auto;
+    }
+    .hero-eyebrow {
+      font-family: var(--mono); font-size: 0.8rem; color: var(--accent);
+      letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 1rem;
+    }
+    .hero-name {
+      font-size: clamp(2.8rem, 6vw, 5rem); font-weight: 700;
+      line-height: 1.05; letter-spacing: -0.02em; margin-bottom: 1rem;
+    }
+    .hero-name span {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .hero-tagline { font-size: 1.05rem; color: var(--muted); max-width: 440px; line-height: 1.75; margin-bottom: 2rem; }
+    .hero-cta { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.7rem 1.5rem; border-radius: 6px;
+      font-family: var(--sans); font-size: 0.875rem; font-weight: 600;
+      cursor: pointer; text-decoration: none; transition: all 0.2s;
+    }
+    .btn-primary { background: var(--accent); color: #0a0f1c; border: none; }
+    .btn-primary:hover { background: #33ddff; transform: translateY(-1px); }
+    .btn-outline { background: transparent; color: var(--text); border: 1px solid var(--border); }
+    .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+
+    .hero-stats {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 1px; background: var(--border);
+      border: 1px solid var(--border); border-radius: 12px; overflow: hidden;
+    }
+    .stat-cell { background: var(--surface); padding: 1.5rem; text-align: center; transition: background 0.2s; }
+    .stat-cell:hover { background: var(--surface2); }
+    .stat-num { font-family: var(--mono); font-size: 2rem; font-weight: 700; color: var(--accent); display: block; }
+    .stat-label { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 0.25rem; }
+
+    .glow { position: absolute; width: 600px; height: 600px; border-radius: 50%; filter: blur(120px); opacity: 0.07; pointer-events: none; }
+    .glow-1 { background: var(--accent); top: -100px; right: -100px; }
+    .glow-2 { background: var(--accent2); bottom: -100px; left: -100px; }
+
+    /* SECTIONS */
+    .section-wrap { padding: 5rem clamp(1.5rem, 8vw, 8rem); max-width: 1200px; margin: 0 auto; }
+    .section-label { font-family: var(--mono); font-size: 0.75rem; color: var(--accent); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 0.5rem; }
+    .section-title { font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 700; letter-spacing: -0.02em; margin-bottom: 2.5rem; color: var(--text); }
+    .divider { height: 1px; background: var(--border); max-width: 1200px; margin: 0 auto; }
+
+    /* ABOUT */
+    .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start; }
+    .about-text p { color: var(--muted); line-height: 1.8; margin-bottom: 1rem; }
+    .about-text p strong { color: var(--text); }
+    .contact-list { list-style: none; display: flex; flex-direction: column; gap: 0.75rem; }
+    .contact-list li { display: flex; align-items: center; gap: 0.75rem; font-size: 0.9rem; }
+    .contact-list .icon { width: 32px; height: 32px; border-radius: 6px; background: var(--surface2); display: flex; align-items: center; justify-content: center; font-size: 0.85rem; color: var(--accent); flex-shrink: 0; }
+    .contact-list a { color: var(--muted); text-decoration: none; }
+    .contact-list a:hover { color: var(--accent); }
+
+    /* PRODUCT SKILLS — pillars */
+    .pillars-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2.5rem; }
+    .pillar {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+      padding: 1.25rem; transition: border-color 0.2s, transform 0.2s;
+    }
+    .pillar:hover { border-color: var(--accent); transform: translateY(-2px); }
+    .pillar-icon { font-size: 1.4rem; margin-bottom: 0.6rem; }
+    .pillar-title { font-size: 0.82rem; font-weight: 600; color: var(--text); margin-bottom: 0.4rem; }
+    .pillar-desc { font-size: 0.78rem; color: var(--muted); line-height: 1.5; }
+
+    /* TOOL TAGS */
+    .skill-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1.25rem; transition: border-color 0.2s, transform 0.2s; }
+    .skill-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+    .skill-card-title { font-size: 0.75rem; color: var(--accent); font-family: var(--mono); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.75rem; }
+    .skills-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; }
+    .skill-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+    .tag { font-size: 0.78rem; padding: 0.25rem 0.6rem; border-radius: 4px; background: var(--surface2); color: var(--muted); font-family: var(--mono); }
+    .tag-accent { background: rgba(0,212,255,0.1); color: var(--accent); }
+    .tag-purple { background: rgba(124,58,237,0.1); color: #a78bfa; }
+    .tag-green { background: rgba(16,185,129,0.1); color: var(--accent3); }
+    .tag-warn { background: rgba(245,158,11,0.12); color: var(--warn); }
+
+    /* EXPERIENCE TIMELINE */
+    .timeline { display: flex; flex-direction: column; }
+    .timeline-item { display: grid; grid-template-columns: 140px 1px 1fr; gap: 0 2rem; }
+    .timeline-date { font-family: var(--mono); font-size: 0.75rem; color: var(--muted); text-align: right; padding-top: 0.2rem; line-height: 1.4; }
+    .timeline-line { position: relative; display: flex; flex-direction: column; align-items: center; }
+    .timeline-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); border: 2px solid var(--bg); flex-shrink: 0; margin-top: 0.3rem; }
+    .timeline-connector { width: 1px; flex: 1; background: var(--border); margin-top: 4px; }
+    .timeline-item:last-child .timeline-connector { display: none; }
+    .timeline-content { padding-bottom: 2.5rem; }
+    .timeline-role { font-size: 1rem; font-weight: 600; color: var(--text); margin-bottom: 0.15rem; }
+    .timeline-company { font-size: 0.85rem; color: var(--accent); font-family: var(--mono); margin-bottom: 0.75rem; }
+    .timeline-bullets { list-style: none; display: flex; flex-direction: column; gap: 0.45rem; }
+    .timeline-bullets li { font-size: 0.875rem; color: var(--muted); padding-left: 1rem; position: relative; line-height: 1.65; }
+    .timeline-bullets li::before { content: '▸'; position: absolute; left: 0; color: var(--accent); font-size: 0.7rem; top: 0.15rem; }
+    .impact-badge { display: inline-block; font-family: var(--mono); font-size: 0.72rem; padding: 0.15rem 0.5rem; border-radius: 3px; background: rgba(16,185,129,0.15); color: var(--accent3); margin-left: 0.25rem; }
+    .impact-badge-warn { background: rgba(245,158,11,0.12); color: var(--warn); }
+
+    /* n8n WORKFLOW CARDS */
+    .workflow-section { margin-top: 1.5rem; }
+    .workflow-label { font-family: var(--mono); font-size: 0.72rem; color: var(--warn); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.75rem; }
+    .workflow-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+    .workflow-card {
+      background: var(--surface2); border: 1px solid rgba(245,158,11,0.2);
+      border-radius: 8px; padding: 1rem;
+    }
+    .workflow-card-title { font-size: 0.85rem; font-weight: 600; color: var(--text); margin-bottom: 0.35rem; display: flex; align-items: center; gap: 0.5rem; }
+    .workflow-card-body { font-size: 0.8rem; color: var(--muted); line-height: 1.55; }
+    .workflow-card-tags { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: 0.6rem; }
+
+    /* PROJECTS */
+    .projects-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.25rem; }
+    .project-card {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+      padding: 1.75rem; display: flex; flex-direction: column;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .project-card:hover { border-color: var(--accent2); transform: translateY(-3px); }
+    .project-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem; }
+    .project-name { font-size: 1.05rem; font-weight: 600; color: var(--text); }
+    .project-date { font-family: var(--mono); font-size: 0.72rem; color: var(--muted); white-space: nowrap; }
+    .project-problem { font-size: 0.78rem; color: var(--warn); font-family: var(--mono); margin-bottom: 0.4rem; text-transform: uppercase; letter-spacing: 0.07em; }
+    .project-desc { font-size: 0.875rem; color: var(--muted); line-height: 1.7; margin-bottom: 1.25rem; flex: 1; }
+    .project-tech { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+
+    /* CERTIFICATIONS */
+    .cert-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; }
+    .cert-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1.25rem 1.5rem; display: flex; align-items: center; gap: 1rem; transition: border-color 0.2s; }
+    .cert-card:hover { border-color: var(--accent3); }
+    .cert-icon { font-size: 1.5rem; flex-shrink: 0; }
+    .cert-name { font-size: 0.9rem; font-weight: 600; color: var(--text); }
+    .cert-org { font-size: 0.78rem; color: var(--muted); font-family: var(--mono); margin-top: 0.2rem; }
+
+    /* SUGGESTIONS */
+    .suggestion-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; }
+    .suggestion-card { background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--accent2); border-radius: 8px; padding: 1.25rem; }
+    .suggestion-title { font-size: 0.875rem; font-weight: 600; color: var(--text); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem; }
+    .suggestion-desc { font-size: 0.82rem; color: var(--muted); line-height: 1.6; }
+
+    /* FOOTER */
+    footer { border-top: 1px solid var(--border); padding: 2rem clamp(1.5rem, 8vw, 8rem); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+    .footer-text { font-family: var(--mono); font-size: 0.78rem; color: var(--muted); }
+    .footer-links { display: flex; gap: 1.5rem; }
+    .footer-links a { font-size: 0.85rem; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+    .footer-links a:hover { color: var(--accent); }
+
+    /* FADE IN */
+    .fade-up { opacity: 0; transform: translateY(24px); transition: opacity 0.5s ease, transform 0.5s ease; }
+    .fade-up.visible { opacity: 1; transform: translateY(0); }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      .hero-grid, .about-grid, .workflow-cards { grid-template-columns: 1fr; }
+      .timeline-item { grid-template-columns: 1px 1fr; }
+      .timeline-date { display: none; }
+      .nav-links { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <span class="nav-logo">tulja.dev</span>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#automations">Automations</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#certifications">Certs</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div id="hero" style="padding-top:60px;">
+  <div class="glow glow-1"></div>
+  <div class="glow glow-2"></div>
+  <div class="hero-grid">
+    <div>
+      
+      <h1 class="hero-name">Tulja<br/><span>Rathod</span></h1>
+      <p class="hero-tagline">
+        I sit where product, data, and operations meet — identifying user pain points, defining what "fixed" looks like, and shipping the workflows to get there.
+      </p>
+      <div class="hero-cta">
+        <a href="mailto:trathod2142003@gmail.com" class="btn btn-primary">✉ Get in touch</a>
+        <a href="https://github.com/TuljaRathod" target="_blank" class="btn btn-outline">⌥ GitHub</a>
+        <a href="https://www.linkedin.com/in/tulja-rathod/" target="_blank" class="btn btn-outline">Linkedin</a>
+      </div>
+    </div>
+    <div class="hero-stats">
+      <div class="stat-cell">
+        <span class="stat-num">~30%</span>
+        <span class="stat-label">Repeat Issue Reduction</span>
+      </div>
+      <div class="stat-cell">
+        <span class="stat-num">~3h</span>
+        <span class="stat-label">Triage Time Saved / Week</span>
+      </div>
+      <div class="stat-cell">
+        <span class="stat-num">2</span>
+        <span class="stat-label">n8n Workflows Shipped</span>
+      </div>
+      <div class="stat-cell">
+        <span class="stat-num">5+</span>
+        <span class="stat-label">WMS Modules Covered</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ABOUT -->
+<div class="section-wrap">
+  <div class="about-grid">
+    <div class="about-text fade-up">
+      <p class="section-label">About</p>
+      <h2 class="section-title">Product thinking,<br/>grounded in data</h2>
+      <p>
+        I'm a final-year CS undergrad at JUET, currently working as a <strong>Product & CX intern at Shipsy / StockOne</strong> — a B2B SaaS WMS platform. My day-to-day sits at the intersection of client feedback, product decisions, and the data that connects them.
+      </p>
+      <p>
+        I don't just surface issues — I trace them to root cause, understand the user impact, and work with engineering to close the loop. I've built dashboards that drive prioritisation decisions, automated workflows that eliminated repetitive ops work, and conducted API testing that bridged client-reported problems to engineering fixes.
+      </p>
+      <p>
+        I care about <strong>user problems over features</strong>, and I believe the best product decisions come from being uncomfortable with vague answers.
+      </p>
+    </div>
+    <div class="fade-up">
+      <p class="section-label" style="margin-bottom:1.25rem">Contact</p>
+      <ul class="contact-list">
+        <li><span class="icon">✉</span><a href="mailto:trathod2142003@gmail.com">trathod2142003@gmail.com</a></li>
+        <li><span class="icon">📞</span><span style="color:var(--muted)">+91 8269148164</span></li>
+        <li><span class="icon">in</span><a href="https://www.linkedin.com/in/tulja-rathod/" target="_blank">linkedin.com/in/tulja-rathod</a></li>
+        <li><span class="icon">⌥</span><a href="https://github.com/TuljaRathod" target="_blank">github.com/TuljaRathod</a></li>
+        <li><span class="icon">📍</span><span style="color:var(--muted)">Bengaluru, Karnataka · India</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- SKILLS -->
+<div id="skills" class="section-wrap fade-up">
+  <p class="section-label">Skills</p>
+  <h2 class="section-title">Product Toolkit</h2>
+
+  <!-- Product competency pillars -->
+  <div class="pillars-grid">
+    <div class="pillar">
+      <div class="pillar-icon">🔍</div>
+      <div class="pillar-title">User & Product Research</div>
+      <div class="pillar-desc">Root cause analysis, client feedback synthesis, requirement gathering from ops & stakeholders</div>
+    </div>
+    <div class="pillar">
+      <div class="pillar-icon">📊</div>
+      <div class="pillar-title">Data & KPI Analysis</div>
+      <div class="pillar-desc">SQL-driven insights, KPI dashboards, funnel & cohort analysis, product usage metrics</div>
+    </div>
+    <div class="pillar">
+      <div class="pillar-icon">⚙️</div>
+      <div class="pillar-title">Workflow Automation</div>
+      <div class="pillar-desc">n8n workflows for ops automation, AI-assisted triage, Slack-integrated reporting pipelines</div>
+    </div>
+    <div class="pillar">
+      <div class="pillar-icon">🧪</div>
+      <div class="pillar-title">Testing & Validation</div>
+      <div class="pillar-desc">REST API testing via Postman, integration validation, request-response diagnostics</div>
+    </div>
+    <div class="pillar">
+      <div class="pillar-icon">🤝</div>
+      <div class="pillar-title">Cross-functional Collaboration</div>
+      <div class="pillar-desc">Bridging client, ops, engineering and product — translating user pain into actionable specs</div>
+    </div>
+  </div>
+
+  <!-- Tool tags -->
+  <div class="skills-grid">
+    <div class="skill-card">
+      <p class="skill-card-title">Analytics & BI</p>
+      <div class="skill-tags">
+        <span class="tag tag-accent">SQL</span>
+        <span class="tag tag-accent">CTEs</span>
+        <span class="tag tag-accent">Window Functions</span>
+        <span class="tag">Metabase</span>
+        <span class="tag">Tableau</span>
+        <span class="tag">Power BI</span>
+        <span class="tag">Excel</span>
+      </div>
+    </div>
+    <div class="skill-card">
+      <p class="skill-card-title">Product Areas</p>
+      <div class="skill-tags">
+        <span class="tag tag-green">KPI Tracking</span>
+        <span class="tag tag-green">Root Cause Analysis</span>
+        <span class="tag tag-green">A/B Testing</span>
+        <span class="tag tag-green">Funnel Analysis</span>
+        <span class="tag tag-green">Cohort Analysis</span>
+        <span class="tag tag-green">Data Storytelling</span>
+      </div>
+    </div>
+    <div class="skill-card">
+      <p class="skill-card-title">Automation & Testing</p>
+      <div class="skill-tags">
+        <span class="tag tag-warn">n8n</span>
+        <span class="tag tag-warn">Postman</span>
+        <span class="tag tag-warn">REST API Testing</span>
+        <span class="tag tag-warn">Workflow Design</span>
+        <span class="tag tag-warn">Integration Testing</span>
+      </div>
+    </div>
+    <div class="skill-card">
+      <p class="skill-card-title">Engineering & Dev</p>
+      <div class="skill-tags">
+        <span class="tag tag-purple">Python</span>
+        <span class="tag tag-purple">SQL</span>
+        <span class="tag tag-purple">JavaScript</span>
+        <span class="tag tag-purple">TypeScript</span>
+        <span class="tag">Django</span>
+        <span class="tag">React.js</span>
+        <span class="tag">Pandas</span>
+        <span class="tag">TensorFlow</span>
+      </div>
+    </div>
+    <div class="skill-card">
+      <p class="skill-card-title">Tools & Platforms</p>
+      <div class="skill-tags">
+        <span class="tag">DevRev</span>
+        <span class="tag">Slack</span>
+        <span class="tag">Git / GitHub</span>
+        <span class="tag">Jupyter</span>
+        <span class="tag">VS Code</span>
+        <span class="tag">Generative AI</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- EXPERIENCE -->
+<div id="experience" class="section-wrap">
+  <p class="section-label">Experience</p>
+  <h2 class="section-title">Where I've Worked</h2>
+  <div class="timeline">
+
+    <!-- Shipsy -->
+    <div class="timeline-item fade-up">
+      <div class="timeline-date">Jul 2025<br/>→ Present</div>
+      <div class="timeline-line">
+        <div class="timeline-dot"></div>
+        <div class="timeline-connector"></div>
+      </div>
+      <div class="timeline-content">
+        <p class="timeline-role">Applied AI Engineer (CX) — Product & Support Intern</p>
+        <p class="timeline-company">Shipsy – StockOne (WMS) · B2B SaaS</p>
+        <ul class="timeline-bullets">
+          <li>
+            Acted as the connective tissue between client-reported failures and engineering fixes — owning issue triage, investigation, and resolution across 5+ WMS modules. <span class="impact-badge">5+ issues / week</span>
+          </li>
+          <li>
+            Wrote complex SQL (CTEs, window functions, multi-table joins) to uncover recurring failure patterns in production data, translating raw query output into product improvement recommendations. <span class="impact-badge">~30% fewer repeat issues</span>
+          </li>
+          <li>
+            Designed and shipped Metabase dashboards tracking module-wise, issue trends, and resolution velocity — giving the product team a live signal to prioritise fixes by business impact. <span class="impact-badge">~3h triage saved / week</span>
+          </li>
+          <li>
+            Built two n8n automation workflows (see Automations section) to eliminate manual ops work and create AI-assisted feedback loops between support and product.
+          </li>
+          <li>
+            Conducted REST API testing via Postman to validate request-response cycles and diagnose integration failures — producing reproducible bug reports that unblocked engineering. <span class="impact-badge impact-badge-warn">Faster eng resolution</span>
+          </li>
+          <li>
+            Collaborated with ops, engineering, and client stakeholders to define acceptance criteria for fixes and validate outcomes post-deployment.
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- GAIL -->
+    <div class="timeline-item fade-up">
+      <div class="timeline-date">Jun – Jul 2024</div>
+      <div class="timeline-line">
+        <div class="timeline-dot" style="background: var(--accent2);"></div>
+        <div class="timeline-connector"></div>
+      </div>
+      <div class="timeline-content">
+        <p class="timeline-role">Summer Intern</p>
+        <p class="timeline-company" style="color: var(--accent2);">GAIL (India) Limited · PSU</p>
+        <ul class="timeline-bullets">
+          <li>Built an AI-based voice assistant in Python using NLP, speech recognition, and text-to-speech modules to automate voice-
+            driven system command interactions.
+            </li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- AUTOMATIONS -->
+<div id="automations" class="section-wrap">
+  <p class="section-label">Automation & Workflows</p>
+  <h2 class="section-title">n8n Workflows Shipped</h2>
+  <p style="color:var(--muted);font-size:0.9rem;max-width:620px;margin-bottom:2rem;line-height:1.7;">
+    Both workflows were built to solve real operational pain points — eliminating manual effort, surfacing signal faster, and closing the loop between support data and product decisions.
+  </p>
+
+  <div class="workflow-cards">
+
+    <div class="workflow-card fade-up">
+      <p class="workflow-card-title">🤖 RCA Bot — DevRev Support Tickets</p>
+      <p class="workflow-card-body">
+        <strong style="color:var(--text)">Problem:</strong> Support tickets in DevRev lacked structured root cause data, making it hard to identify recurring issues and drive product fixes.<br/><br/>
+        <strong style="color:var(--text)">Solution:</strong> Built an n8n workflow that automatically processes incoming DevRev support tickets, runs AI-assisted root cause classification, and enriches tickets with structured RCA tags — feeding a feedback loop directly into product prioritisation.<br/><br/>
+        <strong style="color:var(--text)">Outcome:</strong> Reduced manual categorisation effort, surfaced patterns across WMS modules, and gave the product team a data trail from user complaint to root cause.
+      </p>
+      <div class="workflow-card-tags">
+        <span class="tag tag-warn">n8n</span>
+        <span class="tag tag-warn">DevRev API</span>
+        <span class="tag tag-accent">AI Classification</span>
+        <span class="tag">RCA</span>
+        <span class="tag">Ticket Automation</span>
+      </div>
+    </div>
+
+    <div class="workflow-card fade-up" style="transition-delay:0.1s">
+      <p class="workflow-card-title">📢 Daily Support Update — Slack</p>
+      <p class="workflow-card-body">
+        <strong style="color:var(--text)">Problem:</strong> The support team had no automated visibility into daily ticket status — stakeholders relied on manual check-ins and ad hoc Slack messages to understand what was open, blocked, or resolved.<br/><br/>
+        <strong style="color:var(--text)">Solution:</strong> Built an n8n workflow that runs on a daily schedule, queries ticket data, and posts a structured Slack update broken down by <em>pod, stage, and owner</em> — giving each team instant visibility into their queue without any manual effort.<br/><br/>
+        <strong style="color:var(--text)">Outcome:</strong> Eliminated daily stand-up prep time, improved accountability across pods, and created a persistent async record of support health.
+      </p>
+      <div class="workflow-card-tags">
+        <span class="tag tag-warn">n8n</span>
+        <span class="tag tag-warn">Slack API</span>
+        <span class="tag">Scheduled Trigger</span>
+        <span class="tag">Pod / Stage / Owner</span>
+        <span class="tag">Async Reporting</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Testing experience -->
+  <div style="margin-top:2rem; background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:1.75rem;" class="fade-up">
+    <p style="font-family:var(--mono);font-size:0.75rem;color:var(--warn);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.75rem;">Testing & Validation</p>
+    <h3 style="font-size:1.05rem;font-weight:600;color:var(--text);margin-bottom:1rem;">API Testing & Integration Diagnostics</h3>
+    <ul class="timeline-bullets" style="gap:0.55rem;">
+      <li>
+        Used <strong style="color:var(--text)">Postman</strong> to test REST API endpoints across WMS integrations — validating request-response cycles, checking payload structures, and catching edge cases before they reached clients.
+      </li>
+      <li>
+        Reproduced client-reported integration failures in a controlled environment, isolating whether root cause sat in the API contract, data mapping, or third-party system — producing structured bug reports engineering could act on immediately.
+      </li>
+      <li>
+        Validated post-fix deployments by re-running test suites against production endpoints to confirm regressions were resolved, closing the issue lifecycle loop.
+      </li>
+      <li>
+        Wrote SQL-based data validation queries to verify that system state matched expected outcomes after workflow execution — a layer of testing beyond API surface level.
+      </li>
+    </ul>
+    <div style="display:flex;flex-wrap:wrap;gap:0.4rem;margin-top:1rem;">
+      <span class="tag tag-warn">Postman</span>
+      <span class="tag tag-warn">REST API Testing</span>
+      <span class="tag tag-warn">Integration Validation</span>
+      <span class="tag tag-accent">SQL Validation</span>
+      <span class="tag">Bug Reproduction</span>
+      <span class="tag">Regression Testing</span>
+      <span class="tag">Payload Debugging</span>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- PROJECTS -->
+<div id="projects" class="section-wrap">
+  <p class="section-label">Projects</p>
+  <h2 class="section-title">Things I've Built</h2>
+  <div class="projects-grid">
+
+    <div class="project-card fade-up">
+      <div class="project-header">
+        <p class="project-name">🏥 MedAssist</p>
+        <span class="project-date">Mar – May 2026</span>
+      </div>
+      <p class="project-problem">Problem: patients can't self-triage severity without a doctor visit</p>
+      <p class="project-desc">
+        Designed and built a two-sided platform (Patient & Doctor) with distinct user flows: symptom reporting, appointment booking, prescription management, and emergency referrals. Integrated Claude AI for symptom severity classification — reducing unnecessary in-person consultations. Shipped a role-based analytics dashboard so each user type has visibility into the metrics that matter to them.
+      </p>
+      <div class="project-tech">
+        <span class="tag tag-purple">Django 4.2</span>
+        <span class="tag tag-accent">Anthropic API</span>
+        <span class="tag">SQLite</span>
+        <span class="tag">Chart.js</span>
+        <span class="tag">HTML/CSS/JS</span>
+      </div>
+    </div>
+
+    <div class="project-card fade-up" style="transition-delay:0.1s">
+      <div class="project-header">
+        <p class="project-name">🤟 Sign Language Converter</p>
+        <span class="project-date">Feb – May 2025</span>
+      </div>
+      <p class="project-problem">Problem: real-time speech-to-sign translation gap for accessibility</p>
+      <p class="project-desc">
+        ML pipeline that converts speech and text inputs into sign language gestures using deep learning. Built end-to-end: dataset preprocessing, model training, and real-time translation output. Focused on accessibility as the core user need.
+      </p>
+      <div class="project-tech">
+        <span class="tag tag-purple">Python</span>
+        <span class="tag tag-purple">TensorFlow</span>
+        <span class="tag">Deep Learning</span>
+        <span class="tag">NLP</span>
+        <span class="tag">Speech Recognition</span>
+      </div>
+    </div>
+
+    <div class="project-card fade-up" style="transition-delay:0.2s">
+      <div class="project-header">
+        <p class="project-name">🎙️ AI Voice Assistant</p>
+        <span class="project-date">Jun – Jul 2024</span>
+      </div>
+      <p class="project-problem">Problem: manual repetitive system commands waste operator time</p>
+      <p class="project-desc">
+        Built an AI-based voice assistant in Python using NLP, speech recognition, and text-to-speech modules to automate voice-
+        driven system command interactions.
+      </p>
+      <div class="project-tech">
+        <span class="tag tag-purple">Python</span>
+        <span class="tag">NLP</span>
+        <span class="tag">SpeechRecognition</span>
+        <span class="tag">TTS</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- CERTIFICATIONS -->
+<div id="certifications" class="section-wrap">
+  <p class="section-label">Certifications</p>
+  <h2 class="section-title">Credentials</h2>
+  <div class="cert-grid">
+    <div class="cert-card fade-up">
+      <span class="cert-icon">🧠</span>
+      <div>
+        <p class="cert-name">Large Language Models</p>
+        <p class="cert-org">NPTEL · May 2026</p>
+      </div>
+    </div>
+    <div class="cert-card fade-up">
+      <span class="cert-icon">☁️</span>
+      <div>
+        <p class="cert-name">Cloud Computing</p>
+        <p class="cert-org">NPTEL · Nov 2025</p>
+      </div>
+    </div>
+    <div class="cert-card fade-up">
+      <span class="cert-icon">📊</span>
+      <div>
+        <p class="cert-name">Introduction to Machine Learning</p>
+        <p class="cert-org">NPTEL · Nov 2024</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <p class="footer-text">© 2026 Tulja Rathod</p>
+  <div class="footer-links">
+    <a href="mailto:trathod2142003@gmail.com">Email</a>
+    <a href="https://www.linkedin.com/in/tulja-rathod/" target="_blank">LinkedIn</a>
+    <a href="https://github.com/TuljaRathod" target="_blank">GitHub</a>
+  </div>
+</footer>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
